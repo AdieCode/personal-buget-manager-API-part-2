@@ -1,12 +1,9 @@
 const { Pool } = require('pg');
+const DATABASE_URL = process.env.DATABASE_URL;
 
 // Connection pool configuration
 const budgetManager = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'budgetManager',
-  password: 'postgres',
-  port: 5432, // Default PostgreSQL port is 5432
+    connectionString: DATABASE_URL,
 });
 
 
