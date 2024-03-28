@@ -4,8 +4,6 @@ const cors = require('cors')
 const { data } = require('./database/data.js')
 const app = express()
 
-let userBudgetManager;
-
 app.use(cors('tiny'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -30,20 +28,27 @@ app.post('/envelopes', (req, res, next) => {
     } else {
       res.status(404).send('Invalid data received');
     }
+});
 
+app.post('/envelopes/transaction', (req, res, next) => {
 
-})
+  const amount = req.body.amount;
+  const recipient = req.body.recipient;
+  const id = req.body.id; 
 
-app.get('/envelopes', (req, res, next) => {
-  data.getEnvelopes(1, (err, result) => {
-    if (err) {
-      console.error('Error getting envelopes:', err);
-      res.status(500).json({ error: 'Internal server error' });
-      return;
-    }
-    res.json(result); // Send the result to the client as JSON
-  });
+  if (amount && recipient && id ){
+    data.addTransaction(req.body, (err, result) => {
+      if (err) {
+        console.error('Error getting envelopes:', err);
+        res.status(500).json({ error: 'Internal server error' });
+        return;
+      }
+      res.status(200).json(result); // Send the result to the client as JSON
+    });
 
+  } else {
+    res.status(404).send('Invalid data received');
+  }
 });
 
 app.get('/envelopes/:stack_id', (req, res, next) => {
@@ -63,7 +68,7 @@ app.get('/envelopes/:stack_id', (req, res, next) => {
   } else {
     res.status(404).send('Invalid id received');
   }
-})
+});
 
 app.put('/envelopes/add', (req, res, next) => {
   const id = req.params.id;
@@ -82,10 +87,9 @@ app.put('/envelopes/add', (req, res, next) => {
   } else {
     res.status(404).send('Invalid id received');
   }
-})
+});
 
 app.put('/envelopes/editAmount/:id', (req, res, next) => {
-
   const id = req.params.id;
   const budget = req.body.budget;
 
@@ -108,25 +112,81 @@ app.put('/envelopes/editCategory/:id', (req, res, next) => {
   const id = req.params.id;
   const category = req.body.category;
 
-})
+  if (id && category){
+    data.updateEnvelopeCategory(id,req.body, (err, result) => {
+      if (err) {
+        console.error('Error getting envelopes:', err);
+        res.status(500).json({ error: 'Internal server error' });
+        return;
+      }
+      res.status(200).json(result); // Send the result to the client as JSON
+    });
 
-app.put('/envelopes/deplete/:category', (req, res, next) => {
-  const category = req.params.category;
+  } else {
+    res.status(404).send('Invalid data received');
+  }
+
+});
+
+app.put('/envelopes/deplete/:id', (req, res, next) => {
+  const id = req.params.id;
   const amount = req.body.amount;
 
-})
+  if ( id && amount ){
+    data.subtractFromEnvelopeBudget(id, amount, (err, result) => {
+      if (err) {
+        console.error('Error getting envelopes:', err);
+        res.status(500).json({ error: 'Internal server error' });
+        return;
+      }
+      res.status(200).json(result); // Send the result to the client as JSON
+    });
+
+  } else {
+    res.status(404).send('Invalid id received');
+  }
+
+});
 
 app.put('/envelopes/transfer/:from_id/:to_id', (req, res, next) => {
-  const from = req.params.from_id;
-  const to = req.params.to_id;
+
+  const from_id = req.params.from_id;
+  const to_id = req.params.to_id;
   const amount = req.body.amount;
 
-})
+  if ( from_id && to_id && amount ){
+    data.transferAmount(from_id, to_id, amount, (err, result) => {
+      if (err) {
+        console.error('Error getting envelopes:', err);
+        res.status(500).json({ error: 'Internal server error' });
+        return;
+      }
+      res.status(200).json(result); // Send the result to the client as JSON
+    });
+
+  } else {
+    res.status(404).send('Invalid (parameter or data) received');
+  };
+
+});
 
 app.delete('/envelopes/:id', (req, res, next) => {
-  const category = req.params.category;
+  const id = req.params.id;
 
-})
+  if ( id ){
+    data.deleteEnvelopeById(id, (err, result) => {
+      if (err) {
+        console.error('Error getting envelopes:', err);
+        res.status(500).json({ error: 'Internal server error' });
+        return;
+      }
+      res.status(200).json(result); // Send the result to the client as JSON
+    });
+
+  } else {
+    res.status(404).send('Invalid id received');
+  };
+});
 
 const port = process.env.PORT || 3000; // Use environment port or 3000 if not available
 
