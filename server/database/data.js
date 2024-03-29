@@ -18,7 +18,7 @@ const createTablesQuery = `
 CREATE TABLE IF NOT EXISTS stacks (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
-  total_budget DECIMAL(10, 2) DEFAULT 0
+  total_budget INT DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS envelopes (
@@ -26,13 +26,13 @@ CREATE TABLE IF NOT EXISTS envelopes (
   stack_id INT NOT NULL,
   category VARCHAR(255) NOT NULL,
   description VARCHAR(255),
-  current_budget DECIMAL(10, 2) DEFAULT 0,
+  current_budget INT DEFAULT 0,
   FOREIGN KEY (stack_id) REFERENCES stacks(id)
 );
 
 CREATE TABLE IF NOT EXISTS transactions (
   id SERIAL PRIMARY KEY,
-  amount DECIMAL(10, 2) NOT NULL,
+  amount INT NOT NULL,
   recipient VARCHAR(255) NOT NULL,
   envelope_id INT NOT NULL,
   FOREIGN KEY (envelope_id) REFERENCES envelopes(id)
@@ -54,14 +54,23 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Step 2: Create a trigger to call the function on envelope updates
 CREATE TRIGGER envelopes_update_trigger
 AFTER INSERT OR UPDATE OF current_budget ON envelopes
 FOR EACH ROW
 EXECUTE FUNCTION update_total_budget();
 
 INSERT INTO stacks (title, total_budget)
-VALUES ('My budget', 0);
+VALUES ('My budget', 100);
+
+INSERT INTO stacks (title, total_budget)
+VALUES ('Another budget', 100);
+
+INSERT INTO envelopes (stack_id, category, description, current_budget)
+VALUES (1, 'gas', 'for my car', 100);
+
+INSERT INTO envelopes (stack_id, category, description, current_budget)
+VALUES (1, 'electricity', 'household', 100);
+
 `;
   
 budgetManager.query(createTablesQuery)
