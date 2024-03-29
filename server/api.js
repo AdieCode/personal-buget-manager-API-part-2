@@ -29,9 +29,9 @@ app.post('/envelopes/add', (req, res, next) => {
     const stack_id = req.body.stack_id;
     const category = req.body.category;
     const description = req.body.description;
-    const budget = req.body.budget;
+    const budget = parseInt(req.body.budget);
 
-    if (stack_id && category && description && budget){
+    if (stack_id && category && description && !isNaN(budget)){
       data.addEnvelope(req.body, (err, result) => {
         if (err) {
           console.error('Error getting envelopes:', err);
