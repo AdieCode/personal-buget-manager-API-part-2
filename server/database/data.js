@@ -6,6 +6,16 @@ const budgetManager = new Pool({
     connectionString: DATABASE_URL,
 });
 
+// for local
+// const budgetManager = new Pool({
+//     user: 'postgres',
+//     host: 'localhost',
+//     database: 'budgetManager',
+//     password: 'postgres',
+//     port: 5432, // Default PostgreSQL port is 5432
+//   });
+  
+
 
 // Defineing an object to hold the functions for working with the databse.
 const data = {

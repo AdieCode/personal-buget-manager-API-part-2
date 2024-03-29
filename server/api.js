@@ -8,6 +8,10 @@ app.use(cors('tiny'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+app.get('/', (req, res) => {
+  res.send('Welcome to the Budget Manager API');
+});
+
 app.post('/envelopes', (req, res, next) => {
 
     const stack_id = req.body.stack_id;
