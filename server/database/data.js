@@ -14,8 +14,61 @@ const budgetManager = new Pool({
 //     password: 'postgres',
 //     port: 5432, // Default PostgreSQL port is 5432
 //   });
-  
+const createTablesQuery = `
+CREATE TABLE IF NOT EXISTS stacks (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  total_budget DECIMAL(10, 2) DEFAULT 0
+);
 
+CREATE TABLE IF NOT EXISTS envelopes (
+  id SERIAL PRIMARY KEY,
+  stack_id INT NOT NULL,
+  category VARCHAR(255) NOT NULL,
+  description VARCHAR(255),
+  current_budget DECIMAL(10, 2) DEFAULT 0,
+  FOREIGN KEY (stack_id) REFERENCES stacks(id)
+);
+
+CREATE TABLE IF NOT EXISTS transactions (
+  id SERIAL PRIMARY KEY,
+  amount DECIMAL(10, 2) NOT NULL,
+  recipient VARCHAR(255) NOT NULL,
+  envelope_id INT NOT NULL,
+  FOREIGN KEY (envelope_id) REFERENCES envelopes(id)
+);
+
+CREATE OR REPLACE FUNCTION update_total_budget()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Calculate the total budget for the affected stack_id
+    UPDATE stacks
+    SET total_budget = (
+        SELECT SUM(current_budget)
+        FROM envelopes
+        WHERE envelopes.stack_id = NEW.stack_id
+    )
+    WHERE stacks.id = NEW.stack_id;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Step 2: Create a trigger to call the function on envelope updates
+CREATE TRIGGER envelopes_update_trigger
+AFTER INSERT OR UPDATE OF current_budget ON envelopes
+FOR EACH ROW
+EXECUTE FUNCTION update_total_budget();
+
+`;
+  
+budgetManager.query(createTablesQuery)
+    .then(() => {
+        console.log('Tables created successfully');
+    })
+    .catch((err) => {
+        console.error('Error creating tables:', err);
+    });
 
 // Defineing an object to hold the functions for working with the databse.
 const data = {
