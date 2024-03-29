@@ -24,7 +24,7 @@ app.get('/stacks', (req, res, next) => {
     });
 });
 
-app.post('/envelopes', (req, res, next) => {
+app.post('/envelopes/add', (req, res, next) => {
 
     const stack_id = req.body.stack_id;
     const category = req.body.category;
@@ -70,25 +70,6 @@ app.post('/envelopes/transaction', (req, res, next) => {
 app.get('/envelopes/:stack_id', (req, res, next) => {
   
   const stack_id = req.params.stack_id;
-
-  if ( stack_id ){
-    data.getEnvelope(stack_id, (err, result) => {
-      if (err) {
-        console.error('Error getting envelopes:', err);
-        res.status(500).json({ error: 'Internal server error' });
-        return;
-      }
-      res.status(200).json(result); // Send the result to the client as JSON
-    });
-
-  } else {
-    res.status(404).send('Invalid id received');
-  }
-});
-
-app.put('/envelopes/add', (req, res, next) => {
-  const id = req.params.id;
-  const budget = req.body.budget;
 
   if ( stack_id ){
     data.getEnvelope(stack_id, (err, result) => {

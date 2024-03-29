@@ -4,85 +4,15 @@ const DATABASE_URL = process.env.DATABASE_URL;
 // Connection pool configuration
 const budgetManager = new Pool({
     connectionString: DATABASE_URL,
+
 });
 
-// for local
+local
 // const budgetManager = new Pool({
-//     user: 'postgres',
-//     host: 'localhost',
-//     database: 'budgetManager',
-//     password: 'postgres',
-//     port: 5432, // Default PostgreSQL port is 5432
-//   });
+//   connectionString: 'postgres://accountant:3YUh1djCapEienuk9LtYp95hC0INElkj@dpg-co2tq70l6cac73e8nr50-a.frankfurt-postgres.render.com/budgetmanager?ssl=true',
 
-// const createTablesQuery = `
-// CREATE TABLE IF NOT EXISTS stacks (
-//   id SERIAL PRIMARY KEY,
-//   title VARCHAR(255) NOT NULL,
-//   total_budget INT DEFAULT 0
-// );
+// });
 
-// CREATE TABLE IF NOT EXISTS envelopes (
-//   id SERIAL PRIMARY KEY,
-//   stack_id INT NOT NULL,
-//   category VARCHAR(255) NOT NULL,
-//   description VARCHAR(255),
-//   current_budget INT DEFAULT 0,
-//   FOREIGN KEY (stack_id) REFERENCES stacks(id)
-// );
-
-// CREATE TABLE IF NOT EXISTS transactions (
-//   id SERIAL PRIMARY KEY,
-//   amount INT NOT NULL,
-//   recipient VARCHAR(255) NOT NULL,
-//   envelope_id INT NOT NULL,
-//   FOREIGN KEY (envelope_id) REFERENCES envelopes(id)
-// );
-
-// CREATE OR REPLACE FUNCTION update_total_budget()
-// RETURNS TRIGGER AS $$
-// BEGIN
-//     -- Calculate the total budget for the affected stack_id
-//     UPDATE stacks
-//     SET total_budget = (
-//         SELECT SUM(current_budget)
-//         FROM envelopes
-//         WHERE envelopes.stack_id = NEW.stack_id
-//     )
-//     WHERE stacks.id = NEW.stack_id;
-
-//     RETURN NEW;
-// END;
-// $$ LANGUAGE plpgsql;
-
-// CREATE TRIGGER envelopes_update_trigger
-// AFTER INSERT OR UPDATE OF current_budget ON envelopes
-// FOR EACH ROW
-// EXECUTE FUNCTION update_total_budget();
-
-// INSERT INTO stacks (title, total_budget)
-// VALUES ('My budget', 100);
-
-// INSERT INTO stacks (title, total_budget)
-// VALUES ('Another budget', 100);
-
-// INSERT INTO envelopes (stack_id, category, description, current_budget)
-// VALUES (1, 'gas', 'for my car', 100);
-
-// INSERT INTO envelopes (stack_id, category, description, current_budget)
-// VALUES (1, 'electricity', 'household', 100);
-
-// `;
-  
-// budgetManager.query(createTablesQuery)
-//     .then(() => {
-//         console.log('Tables created successfully');
-//     })
-//     .catch((err) => {
-//         console.error('Error creating tables:', err);
-//     });
-
-// Defineing an object to hold the functions for working with the databse.
 const data = {
 
     addStack: function(newData, callback) {
