@@ -60,6 +60,8 @@ AFTER INSERT OR UPDATE OF current_budget ON envelopes
 FOR EACH ROW
 EXECUTE FUNCTION update_total_budget();
 
+INSERT INTO stacks (title, total_budget)
+VALUES ('My budget', 0);
 `;
   
 budgetManager.query(createTablesQuery)
