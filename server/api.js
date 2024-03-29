@@ -12,6 +12,18 @@ app.get('/', (req, res) => {
   res.send('Welcome to the Budget Manager API');
 });
 
+app.get('/stacks', (req, res, next) => {
+
+    data.getStacks((err, result) => {
+      if (err) {
+        console.error('Error getting stacks:', err);
+        res.status(500).json({ error: 'Internal server error' });
+        return;
+      }
+      res.status(200).json(result); // Send the result to the client as JSON
+    });
+});
+
 app.post('/envelopes', (req, res, next) => {
 
     const stack_id = req.body.stack_id;
