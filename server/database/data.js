@@ -4,7 +4,6 @@ const DATABASE_URL = process.env.DATABASE_URL;
 // Connection pool configuration
 const budgetManager = new Pool({
     connectionString: DATABASE_URL,
-
 });
 
 local
