@@ -6,7 +6,7 @@ const budgetManager = new Pool({
     connectionString: DATABASE_URL,
 });
 
-local
+// local
 // const budgetManager = new Pool({
 //   connectionString: 'postgres://accountant:3YUh1djCapEienuk9LtYp95hC0INElkj@dpg-co2tq70l6cac73e8nr50-a.frankfurt-postgres.render.com/budgetmanager?ssl=true',
 
