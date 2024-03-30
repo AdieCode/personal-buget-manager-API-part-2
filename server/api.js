@@ -72,7 +72,7 @@ app.get('/envelopes/:stack_id', (req, res, next) => {
   const stack_id = req.params.stack_id;
 
   if ( stack_id ){
-    data.getEnvelope(stack_id, (err, result) => {
+    data.getEnvelopes(stack_id, (err, result) => {
       if (err) {
         console.error('Error getting envelopes:', err);
         res.status(500).json({ error: 'Internal server error' });
