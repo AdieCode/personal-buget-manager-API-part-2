@@ -2,24 +2,9 @@ const { Pool } = require('pg');
 const DATABASE_URL = process.env.DATABASE_URL;
 
 // Connection pool configuration
-// const budgetManager = new Pool({
-//     connectionString: DATABASE_URL,
-// });
-
-// External connection
 const budgetManager = new Pool({
-  connectionString: 'postgres://accountant:3YUh1djCapEienuk9LtYp95hC0INElkj@dpg-co2tq70l6cac73e8nr50-a.frankfurt-postgres.render.com/budgetmanager?ssl=true',
-
+    connectionString: DATABASE_URL,
 });
-
-// Local connection
-// const newDatabaseConnection = new Pool({
-//   user: 'admin',
-//   host: 'localhost',
-//   database: 'api',
-//   password: 'password',
-//   port: 5432,
-// })
 
 const data = {
 
@@ -96,7 +81,7 @@ const data = {
     },
         
     getStacks: function(callback) {
-      budgetManager.query('SELECT * FROM stacks;', (err, res) => {
+      budgetManager.query('SELECT * FROM stacks ORDER BY id;', (err, res) => {
         if (err) {
           console.error('Error executing query', err);
           callback(err, null);
@@ -118,7 +103,7 @@ const data = {
     },
     
     getEnvelopes: function(id, callback) {
-      budgetManager.query('SELECT * FROM envelopes WHERE stack_id = $1;', [id], (err, res) => {
+      budgetManager.query('SELECT * FROM envelopes WHERE stack_id = $1 ORDER BY id;', [id], (err, res) => {
         if (err) {
           console.error('Error executing query', err);
           callback(err, null);
