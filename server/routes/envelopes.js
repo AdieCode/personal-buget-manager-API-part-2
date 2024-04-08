@@ -66,7 +66,7 @@ router.get('/:stack_id', (req, res, next) => {
   }
 });
 
-router.get('/:envelope_id', (req, res, next) => {
+router.get('envelope/:envelope_id', (req, res, next) => {
   
   const envelope_id = req.params.envelope_id;
 
