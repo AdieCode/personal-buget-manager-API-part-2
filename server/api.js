@@ -63,7 +63,7 @@ app.get('/', (req, res) => {
 
 // Mounting the router to a specific path
 app.use('/stacks', stacksRouter);
-app.use('/envelops', envelopesRouter);
+app.use('/envelopes', envelopesRouter);
 
 const port = process.env.PORT || 3000; // Use environment port or 3000 if not available
 
